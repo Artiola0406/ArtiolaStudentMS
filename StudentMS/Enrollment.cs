@@ -15,8 +15,8 @@
 
         public void SetGrade(double grade)
         {
-            if (grade < 0 || grade > 100)
-                throw new ArgumentException("Grade must be between 0 and 100");
+            if (grade < 6 || grade > 10)
+                throw new ArgumentException("Grade must be between 6 and 10");
             Grade = grade;
         }
 
