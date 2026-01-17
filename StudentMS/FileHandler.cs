@@ -2,89 +2,144 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 namespace StudentMS
 {
     public class FileHandler
     {
-        private const string FilePath = "university_data.json";
-
-        private class UniversityData
-        {
-            public List<Student> Students { get; set; } = new List<Student>();
-            public List<Professor> Professors { get; set; } = new List<Professor>();
-            public List<Course> Courses { get; set; } = new List<Course>();
-            public List<Enrollment> AllEnrollments { get; set; } = new List<Enrollment>();
-        }
+        private const string FilePath = "university_data.txt";
 
         public void SaveUniversity(University university)
         {
-            var allEnrollments = new List<Enrollment>();
-            foreach (var student in university.Students)
+            try
             {
-                allEnrollments.AddRange(student.Enrollments);
+                using (StreamWriter writer = new StreamWriter(FilePath))
+                {
+                    // Shkruaj studentët
+                    writer.WriteLine("=== STUDENTS ===");
+                    foreach (var student in university.Students)
+                    {
+                        writer.WriteLine($"STUDENT|{student.Name}|{student.Email}|{student.ID}");
+
+                        foreach (var enrollment in student.Enrollments)
+                        {
+                            writer.WriteLine($"ENROLLMENT|{enrollment.StudentID}|{enrollment.CourseCode}|{enrollment.Grade}");
+                        }
+                    }
+
+                    // Shkruaj profesorët
+                    writer.WriteLine("\n=== PROFESSORS ===");
+                    foreach (var professor in university.Professors)
+                    {
+                        writer.WriteLine($"PROFESSOR|{professor.Name}|{professor.Department}|{professor.OfficeNumber}|{professor.ID}");
+
+                        foreach (var course in professor.CoursesTeaching)
+                        {
+                            writer.WriteLine($"TEACHES|{professor.ID}|{course}");
+                        }
+                    }
+
+                    // Shkruaj kurset
+                    writer.WriteLine("\n=== COURSES ===");
+                    foreach (var course in university.Courses)
+                    {
+                        writer.WriteLine($"COURSE|{course.CourseCode}|{course.CourseName}|{course.Credits}|{course.Capacity}|{course.ProfessorID}");
+                    }
+                }
+
+                Console.WriteLine($"Data saved to {FilePath}");
             }
-
-            var data = new UniversityData
+            catch (Exception ex)
             {
-                Students = university.Students,
-                Professors = university.Professors,
-                Courses = university.Courses,
-                AllEnrollments = allEnrollments
-            };
-
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonContent = JsonSerializer.Serialize(data, options);
-            File.WriteAllText(FilePath, jsonContent);
-            Console.WriteLine($"Data saved to {FilePath}");
+                Console.WriteLine($"Save error: {ex.Message}");
+            }
         }
 
         public University LoadUniversity()
         {
             if (!File.Exists(FilePath))
-            {
-                Console.WriteLine("No saved data found. Starting fresh.");
-                return new University();
-            }
-
-            string jsonContent = File.ReadAllText(FilePath);
-            var data = JsonSerializer.Deserialize<UniversityData>(jsonContent);
-
-            if (data == null)
                 return new University();
 
-            var university = new University
+            try
             {
-                Students = data.Students ?? new List<Student>(),
-                Professors = data.Professors ?? new List<Professor>(),
-                Courses = data.Courses ?? new List<Course>()
-            };
+                var university = new University();
 
-            // Restauro enrollment-et
-            if (data.AllEnrollments != null)
-            {
-                foreach (var enrollment in data.AllEnrollments)
+                using (StreamReader reader = new StreamReader(FilePath))
                 {
-                    var student = university.Students.FirstOrDefault(s => s.ID == enrollment.StudentID);
-                    var course = university.Courses.FirstOrDefault(c => c.CourseCode == enrollment.CourseCode);
-
-                    if (student != null && !student.Enrollments.Any(e =>
-                        e.StudentID == enrollment.StudentID && e.CourseCode == enrollment.CourseCode))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        student.Enrollments.Add(enrollment);
-                    }
+                        if (line.StartsWith("STUDENT|"))
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 4)
+                            {
+                                var student = new Student(parts[1], parts[2], parts[3]);
+                                university.Students.Add(student);
+                            }
+                        }
+                        else if (line.StartsWith("PROFESSOR|"))
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 5)
+                            {
+                                var professor = new Professor(parts[1], parts[2], parts[3], parts[4]);
+                                university.Professors.Add(professor);
+                            }
+                        }
+                        else if (line.StartsWith("COURSE|"))
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 6)
+                            {
+                                int credits = int.Parse(parts[3]);
+                                int capacity = int.Parse(parts[4]);
+                                var course = new Course(parts[1], parts[2], credits, capacity, parts[5]);
+                                university.Courses.Add(course);
+                            }
+                        }
+                        else if (line.StartsWith("ENROLLMENT|"))
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 4)
+                            {
+                                var student = university.Students.FirstOrDefault(s => s.ID == parts[1]);
+                                var course = university.Courses.FirstOrDefault(c => c.CourseCode == parts[2]);
 
-                    if (course != null && !course.Enrollments.Any(e =>
-                        e.StudentID == enrollment.StudentID && e.CourseCode == enrollment.CourseCode))
-                    {
-                        course.Enrollments.Add(enrollment);
+                                if (student != null && course != null)
+                                {
+                                    var enrollment = new Enrollment(parts[1], parts[2]);
+                                    if (double.TryParse(parts[3], out double grade))
+                                        enrollment.Grade = grade;
+
+                                    student.Enrollments.Add(enrollment);
+                                    course.Enrollments.Add(enrollment);
+                                }
+                            }
+                        }
+                        else if (line.StartsWith("TEACHES|"))
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length >= 3)
+                            {
+                                var professor = university.Professors.FirstOrDefault(p => p.ID == parts[1]);
+                                if (professor != null)
+                                {
+                                    professor.CoursesTeaching.Add(parts[2]);
+                                }
+                            }
+                        }
                     }
                 }
-            }
 
-            Console.WriteLine($"Data loaded from {FilePath}");
-            return university;
+                Console.WriteLine($"Data loaded from {FilePath}");
+                return university;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Load error: {ex.Message}");
+                return new University();
+            }
         }
     }
 }
