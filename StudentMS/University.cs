@@ -47,6 +47,11 @@ namespace StudentMS
                 Console.WriteLine($"✅ Student {student.Name} was successfully deleted from the system.");
                 return true;
             }
+            else 
+            {
+                Console.WriteLine($"❌ Student with ID {studentId} not found.");
+                return false;
+            }
             return false;
         }
 
