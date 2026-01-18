@@ -44,7 +44,7 @@ namespace StudentMS
                 }
 
                 Students.Remove(student);
-                Console.WriteLine($"Student {student.Name} deleted successfully.");
+                Console.WriteLine($"✅ Student {student.Name} was successfully deleted from the system.");
                 return true;
             }
             return false;
