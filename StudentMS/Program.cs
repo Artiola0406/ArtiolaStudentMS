@@ -53,7 +53,7 @@ namespace StudentMS
                         case "6": // SAVE AND EXIT
                             fileHandler.SaveUniversity(university);
                             exit = true;
-                            Console.WriteLine("Data saved. Goodbye!");
+                            Console.WriteLine("All data has been saved successfully. Goodbye!");
                             break;
 
                         default:
