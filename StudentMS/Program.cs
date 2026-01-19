@@ -2,6 +2,11 @@
 
 namespace StudentMS
 {
+    /// <summary>
+    /// KLASA PROGRAM - pikë hyrëse e aplikacionit
+    /// Kjo klasë përmban metodën Main() dhe menynë kryesore
+    /// Ajo është interfaça e përdoruesit me sistemin.
+    /// </summary>
     class Program
     {
         static void Main(string[] args)
