@@ -6,6 +6,12 @@ using System.Text.Json;
 
 namespace StudentMS
 {
+    /// <summary>
+    /// KLASA FILEHANDLER - menaxhon ruajtjen dhe ngarkimin e të dhënave
+    /// Kjo klasë është përgjegjëse për PERSISTENCE (mbajtjen e të dhënave)
+    /// Përdor JSON për formatimin e të dhënave.
+    /// Ky është shembull i DESIGN PATTERN "REPOSITORY".
+    /// </summary>
     public class FileHandler
     {
         private const string FilePath = "university_data.json";
