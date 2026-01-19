@@ -1,5 +1,9 @@
 ﻿namespace StudentMS
 {
+    /// <summary>
+    /// KLASA ENROLLMENT - tabelë lidhëse ndërmjet Student dhe Course
+    /// Kjo është marrëdhënia "many-to-many" ndërmjet studentëve dhe kurseve.
+    /// </summary>
     public class Enrollment
     {
         public string StudentID { get; set; }
