@@ -8,6 +8,12 @@ namespace StudentMS
     {
         public List<Enrollment> Enrollments { get; set; }
 
+        /// <summary>
+        /// KLASA STUDENT - trashëgon nga Person
+        /// Paraqet një student në universitet.
+        /// Studenti është një lloj i veçantë i Person.
+        /// </summary>
+
         public Student(string name, string email, string id) : base(name, email, id)
         {
             Enrollments = new List<Enrollment>();
