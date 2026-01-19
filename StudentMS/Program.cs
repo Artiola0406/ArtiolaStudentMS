@@ -8,8 +8,9 @@ namespace StudentMS
         {
             Console.WriteLine("=== Student Management System ===");
 
+            // Përdor metodën e duhur
             var fileHandler = new FileHandler();
-            var university = fileHandler.LoadUniversity();
+            var university = fileHandler.LoadUniversity(); // NGARKO TË DHËNAT
 
             bool exit = false;
 
