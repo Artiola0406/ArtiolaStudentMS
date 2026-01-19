@@ -235,7 +235,7 @@ namespace StudentMS
                     string gradeSId = Console.ReadLine() ?? "";
                     Console.Write("Enter course code: ");
                     string gradeCCode = Console.ReadLine() ?? "";
-                    Console.Write("Enter grade (0-100): ");
+                    Console.Write("Enter grade (6-10): ");
                     double grade = double.Parse(Console.ReadLine() ?? "0");
                     university.SetGrade(gradeSId, gradeCCode, grade);
                     break;
