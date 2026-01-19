@@ -4,6 +4,12 @@ using System.Linq;
 
 namespace StudentMS
 {
+    /// <summary>
+    /// KLASA UNIVERSITY - qendra e kontrollit e të gjithë sistemit
+    /// Kjo klasë përmban të gjitha entitetet (Student, Professor, Course)
+    /// dhe ofron metodat për menaxhimin e tyre.
+    /// Ky është shembull i DESIGN PATTERN "FACADE".
+    /// </summary>
     public class University
     {
         public List<Student> Students { get; set; }
