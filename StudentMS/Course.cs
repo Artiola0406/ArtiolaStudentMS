@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace StudentMS
 {
+    /// <summary>
+    /// KLASA COURSE - paraqet një kurs/lëndë në universitet
+    /// </summary>
     public class Course
     {
         public string CourseCode { get; set; }
