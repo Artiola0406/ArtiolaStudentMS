@@ -8,6 +8,11 @@ namespace StudentMS
         public string Email { get; set; }
         public string ID { get; set; }
 
+        /// <summary>
+        /// KLASA BAZË ABSTRAKTE - Person
+        /// Kjo është klasa "mamë" nga e cila trashëgojnë Student dhe Professor.
+        /// Ajo është abstrakte sepse nuk duam të krijojmë objekte "Person" të përgjithshme.
+        /// </summary>
         public Person(string name, string email, string id)
         {
             Name = name;
