@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace StudentMS
 {
+    /// <summary>
+    /// KLASA PROFESSOR - trashëgon nga Person
+    /// Paraqet një profesor në universitet.
+    /// Profesori është një lloj i veçantë i Person.
+    /// </summary>
     public class Professor : Person
     {
         public string Department { get; set; }
